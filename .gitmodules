@@ -1,0 +1,7 @@
+[submodule "src/RF24"]
+	path = src/RF24
+	url = https://github.com/xeedjr/RF24.git
+
+[submodule "src/os"]
+	path = src/os
+	url = https://github.com/ChibiOS/ChibiOS.git
