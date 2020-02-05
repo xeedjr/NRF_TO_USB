@@ -24,6 +24,9 @@ RFBL::RFBL(RF24* radio) {
 	this->radio->setCRCLength(RF24_CRC_8);          // Use 8-bit CRC for performance
 	this->radio->enableDynamicPayloads();
 	auto rate = this->radio->getCRCLength();
+	if (rate != RF24_CRC_8) {
+		while (1) {}
+	}
 	this->radio->openWritingPipe(pipes[0]);
 	this->radio->openReadingPipe(0, pipes[0]);
 	this->radio->openReadingPipe(1, pipes[1]);
@@ -40,7 +43,7 @@ RFBL::~RFBL() {
 }
 
 
-uint8_t RFBL::Tostr(uint8_t* data, int len, char* str) {
+uint8_t RFBL::Tostr(uint8_t* data, size_t len, char* str) {
 	uint8_t index = 1;
 	str[0] = 0x0A;
 	str++;
@@ -96,12 +99,14 @@ void RFBL::thread_serial(void) {
 		switch(read_buffer[1]) {
 		case 1: // test
 			{
-				char str[10] = {0};
-				uint8_t answ[] = {0x1, 0x1};
-				answ[1] = read_buffer[1];
-				Tostr(answ, 2, str);
+				char str[20] = {0};
+				AnswMessage answ = {0};
+				answ.s.cmdid = read_buffer[1];
+				answ.s.type = 1;
+				answ.s.len = sizeof (answ.s) - 1;
+				auto len = Tostr(answ.b, sizeof(answ.s), str);
 
-				chnWrite(&SDU1, (const uint8_t*)str, 5);
+				chnWrite(&SDU1, (const uint8_t*)str, len);
 			}
 			break;
 		case 2:  /// Write to node
@@ -123,13 +128,13 @@ void RFBL::thread_serial(void) {
 				radio->startListening();
 
 				/// form nswer
-				char str[10] = {0};
-				char index = 1;
-				uint8_t answ[5];
-				answ[index++] = read_buffer[1];
-				answ[index++] = res;
-				answ[0] = index-1;
-				auto len = Tostr(answ, index, str);
+				char str[20] = {0};
+				AnswMessage answ = {0};
+				answ.s.cmdid = read_buffer[1];
+				answ.s.type = 1;
+				answ.s.result = res;
+				answ.s.len = sizeof (answ.s)-1;
+				auto len = Tostr(answ.b, sizeof (answ.s), str);
 				chnWrite(&SDU1, (const uint8_t*)str, len);
 			}
 			break;

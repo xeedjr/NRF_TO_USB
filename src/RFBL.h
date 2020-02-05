@@ -30,6 +30,26 @@ class RFBL {
 	};
 	osThreadDef (RFBL_thread_serial, osPriorityNormal, 1024, 0);              // define Thread and specify to allow three instances
 
+	typedef union {
+		struct {
+			uint8_t len;
+			uint8_t type;
+			// - Common
+			uint8_t cmdid;
+			uint8_t result;
+		}s;
+		uint8_t b[30];
+	} AnswMessage;
+	typedef union {
+		struct {
+			uint8_t len;
+			uint8_t type;
+			// - Common
+			uint8_t data[40];
+		}s;
+		uint8_t b[30];
+	} EventMessage;
+
 	typedef struct {
 		enum msgid {
 			kA,
@@ -47,7 +67,7 @@ class RFBL {
 
 	uint8_t read_buffer[256];
 
-	uint8_t Tostr(uint8_t* data, int len, char* str);
+	uint8_t Tostr(uint8_t* data, size_t len, char* str);
 public:
 	RFBL(RF24* radio);
 	virtual ~RFBL();
