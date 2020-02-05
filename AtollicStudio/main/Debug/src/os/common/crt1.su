@@ -1,0 +1,5 @@
+crt1.c:137:6:__core_init	0	static
+crt1.c:156:6:__early_init	0	static
+crt1.c:170:6:__late_init	0	static
+crt1.c:183:6:__default_exit	0	static
+crt1.c:193:6:__init_ram_areas	8	static

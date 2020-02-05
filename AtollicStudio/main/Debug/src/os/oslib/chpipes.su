@@ -1,0 +1,4 @@
+chpipes.c:207:6:chPipeObjectInit	8	static
+chpipes.c:236:6:chPipeReset	16	static
+chpipes.c:278:8:chPipeWriteTimeout	56	static
+chpipes.c:343:8:chPipeReadTimeout	56	static

@@ -1,0 +1,11 @@
+chmempools.c:77:6:chPoolObjectInitAligned	4	static
+chmempools.c:129:7:chPoolAllocI	8	static
+chmempools.c:161:7:chPoolAlloc	8	static
+chmempools.c:183:6:chPoolFreeI	0	static
+chmempools.c:207:6:chPoolFree	0	static
+chmempools.c:106:6:chPoolLoadArray	16	static
+chmempools.c:226:6:chGuardedPoolObjectInitAligned	8	static
+chmempools.c:275:7:chGuardedPoolAllocTimeoutS	8	static
+chmempools.c:302:7:chGuardedPoolAllocTimeout	8	static
+chmempools.c:325:6:chGuardedPoolFree	8	static
+chmempools.c:247:6:chGuardedPoolLoadArray	16	static

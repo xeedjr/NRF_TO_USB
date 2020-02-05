@@ -1,0 +1,53 @@
+/*
+ * RFBL.h
+ *
+ *  Created on: 30 ñ³÷. 2020 ð.
+ *      Author: Bogdan
+ */
+
+#ifndef RFBL_H_
+#define RFBL_H_
+
+#include "cmsis_os.h"
+#include "RF24.h"
+#include "MailBox.h"
+
+class RFBL {
+	RF24* radio;
+
+	void thread(void);
+	static void RFBL_thread(const void* thisp) {
+		RFBL* p = (RFBL*)thisp;
+		p->thread();
+	};
+	osThreadDef (RFBL_thread, osPriorityNormal, 3, 0);              // define Thread and specify to allow three instances
+
+	void thread_serial(void);
+	static void RFBL_thread_serial(const void* thisp) {
+		RFBL* p = (RFBL*)thisp;
+		p->thread_serial();
+	};
+	osThreadDef (RFBL_thread_serial, osPriorityNormal, 3, 0);              // define Thread and specify to allow three instances
+
+	struct {
+		enum msgid {
+			kA,
+		};
+		union data {
+			struct a{
+
+			};
+		};
+	} Message;
+	MailBox<struct Message, 10> mb;
+
+	// Radio pipe addresses for the 2 nodes to communicate.
+	const uint64_t pipes[4] = { 0xF0F0F0F0E1LL, 0xF0F0F0F0D2LL, 0xF0F0F0F0D3LL, 0xF0F0F0F0D4LL};
+
+public:
+	RFBL(RF24* radio);
+	virtual ~RFBL();
+
+};
+
+#endif /* RFBL_H_ */

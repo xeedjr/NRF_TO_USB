@@ -1,0 +1,20 @@
+/*
+ * RFBL.h
+ *
+ *  Created on: 30 ñ³÷. 2020 ð.
+ *      Author: Bogdan
+ */
+
+#ifndef RFBL_H_
+#define RFBL_H_
+
+#include "RF24.h"
+
+class RFBL {
+	RF24 radio;
+public:
+	RFBL(RF24& radio);
+	virtual ~RFBL();
+};
+
+#endif /* RFBL_H_ */

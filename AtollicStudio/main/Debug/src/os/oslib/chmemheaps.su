@@ -1,0 +1,5 @@
+chmemheaps.c:107:6:_heap_init	8	static
+chmemheaps.c:131:6:chHeapObjectInit	8	static
+chmemheaps.c:172:7:chHeapAllocAligned	48	static
+chmemheaps.c:293:6:chHeapFree	24	static
+chmemheaps.c:357:8:chHeapStatus	24	static

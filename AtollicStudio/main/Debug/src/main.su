@@ -1,0 +1,2 @@
+main.cpp:14:6:void Timer1_Callback(const void*)	0	static
+main.cpp:24:5:int main()	16	static

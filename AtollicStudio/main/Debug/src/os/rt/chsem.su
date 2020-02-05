@@ -1,0 +1,11 @@
+chsem.c:97:6:chSemObjectInit	0	static
+chsem.c:147:6:chSemResetI	16	static
+chsem.c:120:6:chSemReset	8	static
+chsem.c:197:7:chSemWaitS	8	static
+chsem.c:175:7:chSemWait	8	static
+chsem.c:264:7:chSemWaitTimeoutS	8	static
+chsem.c:235:7:chSemWaitTimeout	8	static
+chsem.c:294:6:chSemSignal	8	static
+chsem.c:319:6:chSemSignalI	8	static
+chsem.c:349:6:chSemAddCounterI	16	static
+chsem.c:378:7:chSemSignalWait	16	static

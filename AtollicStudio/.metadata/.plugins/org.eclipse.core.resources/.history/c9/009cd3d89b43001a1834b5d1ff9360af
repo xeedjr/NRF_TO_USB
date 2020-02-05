@@ -1,0 +1,29 @@
+/*
+ * RFBL.h
+ *
+ *  Created on: 30 ñ³÷. 2020 ð.
+ *      Author: Bogdan
+ */
+
+#ifndef RFBL_H_
+#define RFBL_H_
+
+#include "cmsis_os.h"
+#include "RF24.h"
+
+class RFBL {
+	RF24* radio;
+
+	void RFBL::thread(void);
+	static void RFBL_thread(RFBL* thisp) {
+		thisp->thread();
+	};
+	osThreadDef (RFBL_thread, osPriorityNormal, 3, 0);              // define Thread and specify to allow three instances
+
+public:
+	RFBL(RF24& radio);
+	virtual ~RFBL();
+
+};
+
+#endif /* RFBL_H_ */

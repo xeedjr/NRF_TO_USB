@@ -1,0 +1,10 @@
+RF24HALChibios.cpp:48:1:RF24HAL_Chibios::~RF24HAL_Chibios()	0	static
+RF24HALChibios.cpp:52:10:virtual uint32_t RF24HAL_Chibios::millis()	16	static
+RF24HALChibios.cpp:64:6:virtual void RF24HAL_Chibios::csn(int)	0	static
+RF24HALChibios.cpp:76:6:virtual void RF24HAL_Chibios::ce(int)	0	static
+RF24HALChibios.cpp:48:1:virtual RF24HAL_Chibios::~RF24HAL_Chibios()	8	static
+RF24HALChibios.cpp:56:6:virtual void RF24HAL_Chibios::delay(uint16_t)	16	static
+RF24HALChibios.cpp:60:6:virtual void RF24HAL_Chibios::delayMicroseconds(uint16_t)	16	static
+RF24HALChibios.cpp:88:9:virtual uint8_t RF24HAL_Chibios::spi_transfer(uint8_t)	16	static
+RF24HALChibios.cpp:99:6:virtual void RF24HAL_Chibios::hal_init()	8	static
+RF24HALChibios.cpp:43:1:RF24HAL_Chibios::RF24HAL_Chibios()	0	static

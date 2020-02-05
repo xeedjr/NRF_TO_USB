@@ -1,0 +1,151 @@
+/*
+ * RFBL.cpp
+ *
+ *  Created on: 30 ñ³÷. 2020 ð.
+ *      Author: Bogdan
+ */
+
+#include <string>
+#include "ch.h"
+#include "hal.h"
+#include "cmsis_os.h"
+#include "usbcfg.h"
+#include "RFBL.h"
+
+RFBL::RFBL(RF24* radio) {
+	this->radio = radio;
+	// TODO Auto-generated constructor stub
+	this->radio->begin();                           // Setup and configure rf radio
+	this->radio->setChannel(2);
+	this->radio->setPALevel(RF24_PA_MAX);
+	this->radio->setDataRate(RF24_1MBPS);
+	this->radio->setAutoAck(1);                     // Ensure autoACK is enabled
+	this->radio->setRetries(2,15);                  // Optionally, increase the delay between retries & # of retries
+	this->radio->setCRCLength(RF24_CRC_8);          // Use 8-bit CRC for performance
+	this->radio->enableDynamicPayloads();
+	auto rate = this->radio->getCRCLength();
+	this->radio->openWritingPipe(pipes[0]);
+	this->radio->openReadingPipe(0, pipes[0]);
+	this->radio->openReadingPipe(1, pipes[1]);
+	this->radio->openReadingPipe(2, pipes[2]);
+	this->radio->openReadingPipe(3, pipes[3]);
+	this->radio->startListening();
+
+	auto id1 = osThreadCreate (osThread (RFBL_thread), this);
+	auto id2 = osThreadCreate (osThread (RFBL_thread_serial), this);
+}
+
+RFBL::~RFBL() {
+	// TODO Auto-generated destructor stub
+}
+
+
+void RFBL::Tostr(uint8_t* data, int len, char* str) {
+	str[0] = 0x0A;
+	str++;
+	for (int i = 0; i < len; i++) {
+		char tmp[4];
+		sprintf(tmp, "%02X", data[i]);
+		str[0] = tmp[0];
+		str[1] = tmp[1];
+		str += 2;
+	}
+}
+
+void RFBL::thread_serial(void) {
+
+	while(1) {
+		uint8_t ch = 0;
+		int len = 0;
+
+		/// wait 0xOA
+		len = chnRead(&SDU1, (uint8_t*)&ch, 1);
+		if (len != 1) {
+			continue;
+		}
+		if (ch != 0x0A) {
+			continue;
+		}
+
+		/// wAIT LEN
+		len = chnRead(&SDU1, (uint8_t*)&read_buffer[0], 2);
+		if (len != 2) {
+			continue;
+		}
+		sscanf((char*)&read_buffer[0], "%02X", &len);
+		len *= 2;
+		if (len == 0 || len > 255) {
+			continue;
+		}
+		/// get data
+		auto res = chnRead(&SDU1, (uint8_t*)&read_buffer[2], len);
+		if (res != len) {
+			continue;
+		}
+
+		/// convert to bytes
+		for (int i = 0, bytes_index = 0; i < (len + 2); i+=2) {
+			int byte = 0;
+			sscanf((char*)&read_buffer[i], "%02X", &byte);
+			read_buffer[bytes_index++] = byte;
+		}
+		/// parse array
+		switch(read_buffer[1]) {
+		case 1: // test
+			{
+				char str[10] = {0};
+				uint8_t answ[] = {0x1, 0x1};
+				answ[1] = read_buffer[1];
+				Tostr(answ, 2, str);
+
+				chnWrite(&SDU1, (const uint8_t*)str, 5);
+			}
+			break;
+		case 2:  /// Write to node
+			{
+				uint8_t pipe_id = read_buffer[2];
+				uint8_t data_len =  read_buffer[0] - 2;
+				uint8_t* data_p = &read_buffer[3];
+
+				// First, stop listening so we can talk
+				radio->stopListening();
+
+				// Open the correct pipe for writing
+				radio->openWritingPipe(pipes[pipe_id]);
+
+				// Send the final one back.
+				bool res = radio->write( data_p, data_len );
+
+				// Now, resume listening so we catch the next packets.
+				radio->startListening();
+
+				/// form nswer
+				char str[10] = {0};
+				uint8_t answ[] = {0x1, 0x1, 0x00};
+				answ[1] = read_buffer[1];
+				answ[2] = res;
+				Tostr(answ, 2, str);
+				chnWrite(&SDU1, (const uint8_t*)str, 5);
+			}
+			break;
+		case 3:
+			break;
+		}
+	}
+}
+
+
+void RFBL::thread(void) {
+	while(1) {
+		Message msg;
+		mb.pop(msg);
+		if ( radio->available() ) {
+			uint8_t data [25] = {0};
+	        // Fetch the payload, and see if this was the last one.
+	        auto done = radio->read( data, sizeof(data) );
+		//	chnWrite(&SDU1, (const uint8_t*)data, sizeof(data));
+//			chnWrite(&SDU1, (const uint8_t*)"\n\r", 2);
+		}
+	}
+}
+

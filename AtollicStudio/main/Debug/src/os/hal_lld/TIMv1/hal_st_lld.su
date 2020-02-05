@@ -1,0 +1,2 @@
+hal_st_lld.c:253:1:VectorB0	8	static
+hal_st_lld.c:281:6:st_lld_init	8	static

@@ -1,0 +1,11 @@
+hal_spi_lld.c:170:13:spi_lld_serve_tx_interrupt	8	static
+hal_spi_lld.c:132:13:spi_lld_serve_rx_interrupt	16	static
+hal_spi_lld.c:197:6:spi_lld_init	8	static
+hal_spi_lld.c:315:6:spi_lld_start	16	static
+hal_spi_lld.c:456:6:spi_lld_stop	16	static
+hal_spi_lld.c:535:6:spi_lld_ignore	0	static
+hal_spi_lld.c:566:6:spi_lld_exchange	4	static
+hal_spi_lld.c:596:6:spi_lld_send	4	static
+hal_spi_lld.c:625:6:spi_lld_receive	0	static
+hal_spi_lld.c:649:6:spi_lld_abort	0	static
+hal_spi_lld.c:669:10:spi_lld_polled_exchange	0	static

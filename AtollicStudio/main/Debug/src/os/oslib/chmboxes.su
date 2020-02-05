@@ -1,0 +1,12 @@
+chmboxes.c:87:6:chMBObjectInit	0	static
+chmboxes.c:133:6:chMBResetI	8	static
+chmboxes.c:113:6:chMBReset	8	static
+chmboxes.c:194:7:chMBPostTimeoutS	24	static
+chmboxes.c:165:7:chMBPostTimeout	8	static
+chmboxes.c:243:7:chMBPostI	8	static
+chmboxes.c:319:7:chMBPostAheadTimeoutS	24	static
+chmboxes.c:290:7:chMBPostAheadTimeout	8	static
+chmboxes.c:368:7:chMBPostAheadI	16	static
+chmboxes.c:444:7:chMBFetchTimeoutS	24	static
+chmboxes.c:415:7:chMBFetchTimeout	8	static
+chmboxes.c:493:7:chMBFetchI	8	static

@@ -1,0 +1,9 @@
+chcond.c:75:6:chCondObjectInit	0	static
+chcond.c:89:6:chCondSignal	8	static
+chcond.c:111:6:chCondSignalI	8	static
+chcond.c:149:6:chCondBroadcastI	16	static
+chcond.c:130:6:chCondBroadcast	8	static
+chcond.c:205:7:chCondWaitS	16	static
+chcond.c:179:7:chCondWait	8	static
+chcond.c:295:7:chCondWaitTimeoutS	24	static
+chcond.c:257:7:chCondWaitTimeout	8	static

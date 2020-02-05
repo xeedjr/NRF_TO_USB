@@ -1,0 +1,16 @@
+hal_queues.c:60:15:iq_read	24	static
+hal_queues.c:108:15:oq_write	24	static
+hal_queues.c:177:6:iqObjectInit	4	static
+hal_queues.c:201:6:iqResetI	8	static
+hal_queues.c:224:7:iqPutI	8	static
+hal_queues.c:258:7:iqGetI	8	static
+hal_queues.c:304:7:iqGetTimeout	16	static
+hal_queues.c:348:8:iqReadI	16	static
+hal_queues.c:389:8:iqReadTimeout	48	static
+hal_queues.c:446:6:oqObjectInit	0	static
+hal_queues.c:470:6:oqResetI	8	static
+hal_queues.c:494:7:oqPutI	8	static
+hal_queues.c:540:7:oqPutTimeout	16	static
+hal_queues.c:581:7:oqGetI	8	static
+hal_queues.c:617:8:oqWriteI	16	static
+hal_queues.c:658:8:oqWriteTimeout	48	static

@@ -1,0 +1,5 @@
+hal_serial_lld.c:237:13:notify1	0	static
+hal_serial_lld.c:313:1:VectorD4	24	static
+hal_serial_lld.c:465:6:sd_lld_init	8	static
+hal_serial_lld.c:518:6:sd_lld_start	16	static
+hal_serial_lld.c:585:6:sd_lld_stop	8	static

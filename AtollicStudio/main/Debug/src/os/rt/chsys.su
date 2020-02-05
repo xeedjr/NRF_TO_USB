@@ -1,0 +1,9 @@
+chsys.c:72:13:_idle_thread	0	static
+chsys.c:100:6:chSysInit	8	static
+chsys.c:198:6:chSysHalt	0	static
+chsys.c:240:6:chSysIntegrityCheckI	0	static
+chsys.c:341:6:chSysTimerHandlerI	32	static
+chsys.c:372:10:chSysGetStatusAndLockX	0	static
+chsys.c:395:6:chSysRestoreStatusX	8	static
+chsys.c:427:6:chSysIsCounterWithinX	0	static
+chsys.c:443:6:chSysPolledDelayX	0	static

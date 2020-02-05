@@ -1,0 +1,17 @@
+/*
+ * RFBL.h
+ *
+ *  Created on: 30 ñ³÷. 2020 ð.
+ *      Author: Bogdan
+ */
+
+#ifndef RFBL_H_
+#define RFBL_H_
+
+class RFBL {
+public:
+	RFBL();
+	virtual ~RFBL();
+};
+
+#endif /* RFBL_H_ */

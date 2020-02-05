@@ -1,0 +1,4 @@
+chmemcore.c:81:6:_core_init	0	static
+chmemcore.c:112:7:chCoreAllocAlignedWithOffsetI	12	static
+chmemcore.c:148:7:chCoreAllocAlignedWithOffset	8	static
+chmemcore.c:167:8:chCoreGetStatusX	0	static

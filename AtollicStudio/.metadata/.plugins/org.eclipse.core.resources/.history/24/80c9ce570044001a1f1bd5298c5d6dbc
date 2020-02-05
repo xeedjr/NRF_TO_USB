@@ -1,0 +1,85 @@
+/*
+ * RFBL.cpp
+ *
+ *  Created on: 30 ñ³÷. 2020 ð.
+ *      Author: Bogdan
+ */
+
+#include "ch.h"
+#include "hal.h"
+#include "cmsis_os.h"
+#include "usbcfg.h"
+#include "RFBL.h"
+
+RFBL::RFBL(RF24* radio) {
+	this->radio = radio;
+	// TODO Auto-generated constructor stub
+	this->radio->begin();                           // Setup and configure rf radio
+	this->radio->setChannel(2);
+	this->radio->setPALevel(RF24_PA_MAX);
+	this->radio->setDataRate(RF24_1MBPS);
+	this->radio->setAutoAck(1);                     // Ensure autoACK is enabled
+	this->radio->setRetries(2,15);                  // Optionally, increase the delay between retries & # of retries
+	this->radio->setCRCLength(RF24_CRC_8);          // Use 8-bit CRC for performance
+	this->radio->setPayloadSize(1);
+	this->radio->enableDynamicPayloads();
+	auto rate = this->radio->getCRCLength();
+	this->radio->openWritingPipe(pipes[0]);
+	this->radio->openReadingPipe(0, pipes[0]);
+	this->radio->openReadingPipe(1, pipes[1]);
+	this->radio->openReadingPipe(2, pipes[2]);
+	this->radio->openReadingPipe(3, pipes[3]);
+	this->radio->startListening();
+
+	auto id1 = osThreadCreate (osThread (RFBL_thread), this);
+	auto id2 = osThreadCreate (osThread (RFBL_thread_serial), this);
+}
+
+RFBL::~RFBL() {
+	// TODO Auto-generated destructor stub
+}
+
+
+void RFBL::strTobytes(char* str, int len) {
+
+}
+
+void RFBL::thread_serial(void) {
+	uint8_t state = 0;
+
+	while(1) {
+		switch (state) {
+		case 0:
+			break;
+		case 0:
+			break;
+		case 0:
+			break;
+		case 0:
+			break;
+		default :
+			state = 0;
+			break;
+		}
+		auto len = chnRead(&SDU1, (uint8_t*)read_buffer, 5);
+		if (len > 0) {
+			strTobytes((char*)read_buffer, len);
+		}
+	}
+}
+
+
+void RFBL::thread(void) {
+	while(1) {
+		Message msg;
+		mb.pop(msg);
+		if ( radio->available() ) {
+			uint8_t data [25] = {0};
+	        // Fetch the payload, and see if this was the last one.
+	        auto done = radio->read( data, sizeof(data) );
+		//	chnWrite(&SDU1, (const uint8_t*)data, sizeof(data));
+//			chnWrite(&SDU1, (const uint8_t*)"\n\r", 2);
+		}
+	}
+}
+

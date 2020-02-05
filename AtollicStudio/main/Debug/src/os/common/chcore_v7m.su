@@ -1,0 +1,2 @@
+chcore_v7m.c:62:6:SVC_Handler	0	static
+chcore_v7m.c:135:6:_port_irq_epilogue	8	static
