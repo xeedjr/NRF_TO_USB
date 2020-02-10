@@ -1,73 +1,65 @@
-import serial
+import threading
+import time
+from nrf24l01 import nrf24l01
+import paho.mqtt.client as mqtt
+import paho.mqtt.subscribe as subscribe
+from struct import *
 
-def bytesTostr(data):
-    res = ''
-    for x in data:
-        res = res + '{:02X}'.format(x)
-    return res
+client = mqtt.Client()
 
-def strTobytes(hex_string):
-    return bytes.fromhex(hex_string);
+def spin_loop(nrf):
+    while True:
+        nrf.process_in()
 
-def sendt(data):
-    ser.write(str.encode('\n' + bytesTostr(data)));
+def event(pipe, data):
+    print('Event pipe ' + str(pipe) + ' : ' + str(data))
+    if pipe == 0: 
+        ## from radiator
+        cmd, setedT, currT= unpack("<Bff", data)
+        client.publish("/radiators/radiator1/state", "{:2.1f}".format(currT))
+        client.publish("/radiators/radiator1/settemp", "{:2.1f}".format(setedT))
 
-def event(packet):
-    print('Event : ')
-    print(packet)
+nrf = nrf24l01('COM10', event)
 
-def process_in():
-    # wait for start
-    while ser.read(size=1) != str.encode('\n'):
-        pass
-    # wait len
-    len = int(str(ser.read(size=2), 'ascii'), 16);
-    # read packet
-    packet = bytes.fromhex(str(ser.read(len * 2), 'ascii'));
-    if (packet[0] == 1):
-        return packet;
-    else:
-        event(packet)
+# The callback for when the client receives a CONNACK response from the server.
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
 
-def test ():
-    ser.write(str.encode('\n' + bytesTostr([1, 1])));
-    packet = process_in();
-    #ser.read_until();
-    #slen = ser.read(size=2);
-    #lens = strTobytes(str(slen, 'ascii'))
-    #data = ser.read(int.from_bytes(lens, "big") * 2);
-    print (packet)
-    
-def send_pipe_data (pipe, data):
-    req = [0, 2]
-    req.append(pipe);
-    req += data;
-    req[0] = len(req)-1;
-    ser.write(str.encode('\n' + bytesTostr(req)));
-    packet = process_in();
-    print (packet)
+    # Subscribing in on_connect() means that if we lose the connection and
+    # reconnect then subscriptions will be renewed.
+    #client.subscribe("$SYS/#")
+    client.subscribe("/radiators/radiator1/set")
+    client.subscribe("/radiators/radiator1/settemp/set")
 
-def read_pipe_data (pipe, data):
-    req = [0, 2]
-    req.append(pipe);
-    req += data;
-    req[0] = len(req)-1;
-    ser.write(str.encode('\n' + bytesTostr(req)));
-    ser.read_until();
-    slen = ser.read(size=2);
-    lens = strTobytes(str(slen, 'ascii'))
-    data = ser.read(int.from_bytes(lens, "big") * 2);
-    print (data)
+# The callback for when a PUBLISH message is received from the server.
+def on_message(client, userdata, msg):
+    print(msg.topic+" "+str(msg.payload))
+    if (msg.topic == "/radiators/radiator1/settemp/set"):
+        data = pack("<Bf", 1, float(msg.payload))
+        nrf.send_pipe_data(0, data);
 
 
-def loop():
-    while True :
-        process_in()
+def mqtt_loop(client):
+    # Blocking call that processes network traffic, dispatches callbacks and
+    # handles reconnecting.
+    # Other loop*() functions are available that give a threaded interface and a
+    # manual interface.
+    while True:
+        client.loop_forever()
 
-ser = serial.Serial('COM10')  # open serial port
-print(ser.name)         # check which port was really used
 
-test()
-send_pipe_data(0, [1, 18]);
+client.on_connect = on_connect
+client.on_message = on_message
+client.connect("192.168.56.50", 1883, 60)
 
-loop()
+x = threading.Thread(target=mqtt_loop, args=(client,))
+x.start()
+x = threading.Thread(target=spin_loop, args=(nrf,))
+x.start()
+
+#nrf.test()
+
+
+while True:
+    time.sleep(10)
+    #nrf.send_pipe_data(0, [1, 21]);
